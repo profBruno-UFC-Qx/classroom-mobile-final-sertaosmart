@@ -1,6 +1,5 @@
-package com.sertosmart
+package com.sertosmart.data.repository
 
-// File: app/src/main/java/com/sertosmart/data/repository/WeatherRepository.kt
 
 import com.sertosmart.data.model.WeatherData
 import com.sertosmart.data.network.ApiClient
