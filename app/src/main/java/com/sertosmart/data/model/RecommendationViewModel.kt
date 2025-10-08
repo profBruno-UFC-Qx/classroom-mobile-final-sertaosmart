@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.sertosmart.data.remote.AgroApi // This import might need adjustment if AgroApi moves
 import com.sertosmart.data.repository.AgroRepository
@@ -54,10 +55,14 @@ class RecommendationViewModel(private val agroRepository: AgroRepository) : View
     }
 }
 
-object RecommendationViewModelFactory {
-    fun create(): RecommendationViewModel {
+object RecommendationViewModelFactory : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(RecommendationViewModel::class.java)) {
         val agroService = AgroApi.retrofitService
         val repository = NetworkAgroRepository(agroService)
-        return RecommendationViewModel(repository)
+            return RecommendationViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

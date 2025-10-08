@@ -36,13 +36,8 @@ class MainActivity : ComponentActivity() {
 fun SertaoSmartApp(modifier: Modifier = Modifier) {
     SertãoSmartTheme {
         Surface(modifier = modifier.fillMaxSize()) {
-            // Usamos a Factory para criar o ViewModel com suas dependências
-            val factory = androidx.lifecycle.viewmodel.viewModelFactory {
-                addInitializer(RecommendationViewModel::class) {
-                    RecommendationViewModelFactory.create()
-                }
-            }
-            val recommendationViewModel: RecommendationViewModel = viewModel(factory = factory)
+            val recommendationViewModel: RecommendationViewModel =
+                viewModel(factory = RecommendationViewModelFactory)
 
             RecommendationScreen(uiState = recommendationViewModel.uiState)
         }
