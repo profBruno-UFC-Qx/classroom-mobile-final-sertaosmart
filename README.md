@@ -3,7 +3,7 @@
 # Proposta de aplicativo
 
 ## Equipe
-* **Nome do Aluno(a) 1:** [Seu nome e matrícula]
+* **Nome do Aluno(a) 1:** Breno Gonzaga de Carvalho 542155
 * **Nome do Aluno(a) 2:** [Seu nome e matrícula]
 * **Nome do Aluno(a) 3:** [Seu nome e matrícula]
 * ...
@@ -11,20 +11,23 @@
 ---
 
 ## Título do Projeto
-[Escolha um título criativo e descritivo para o seu projeto.]
+Sertao Smart 
 
 ## Descrição do Projeto
-[Descreva em 2-3 parágrafos o que o seu projeto faz. Qual é o problema que ele resolve? Quem é o público-alvo? Quais são as principais funcionalidades?]
+O "Sertão Smart" é um aplicativo Android desenvolvido para auxiliar agricultores e entusiastas da jardinagem no semiárido a otimizar o uso da água na irrigação. O aplicativo resolve o problema do desperdício de água e da irrigação ineficiente, que podem prejudicar as plantações e esgotar recursos hídricos valiosos.
+
+O público-alvo são pequenos e médios produtores rurais, estudantes de agronomia e qualquer pessoa que pratique agricultura em regiões com escassez de água. Utilizando dados agrometeorológicos de uma API externa, o app calcula o balanço hídrico diário (diferença entre evapotranspiração e precipitação) e fornece uma recomendação simples e direta sobre a necessidade de irrigação.
 
 ---
 
 ## Funcionalidades Principais
-[Liste as principais funcionalidades do projeto. Use caixas de seleção para que a equipe possa marcar as concluídas nas próximas etapas.]
+[As funcionalidades abaixo representam o estado atual do projeto.]
 
-- [ ] Funcionalidade 1: [Breve descrição da funcionalidade]
-- [ ] Funcionalidade 2: [Breve descrição da funcionalidade]
-- [ ] Funcionalidade 3: [Breve descrição da funcionalidade]
-- [ ] ...
+- [] **Busca de Dados Meteorológicos:** O aplicativo se conecta a uma API para obter dados diários de evapotranspiração e precipitação para uma estação meteorológica pré-definida.
+- [] **Cálculo de Balanço Hídrico:** Com base nos dados obtidos, o app calcula o déficit ou superávit hídrico do solo.
+- [] **Exibição de Recomendação de Irrigação:** Apresenta uma recomendação clara na tela, informando se a irrigação é necessária e, em caso afirmativo, a lâmina de água (em mm) a ser aplicada.
+- [] **Interface Reativa:** A tela exibe estados de carregamento, sucesso e erro, garantindo que o usuário sempre saiba o que está acontecendo.
+- [ ] **Seleção de Localidade:** Permitir que o usuário escolha sua cidade ou estação meteorológica para obter uma recomendação personalizada.
 
 ---
 
