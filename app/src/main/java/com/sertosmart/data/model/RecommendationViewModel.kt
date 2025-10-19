@@ -6,12 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.sertosmart.data.model.QueryHistory
 import com.sertosmart.data.remote.AgroApi // This import might need adjustment if AgroApi moves
 import com.sertosmart.data.repository.AgroRepository
 import com.sertosmart.data.repository.NetworkAgroRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 sealed interface RecommendationUiState {
     data class Success(val recommendation: String) : RecommendationUiState
@@ -45,6 +48,17 @@ class RecommendationViewModel(private val agroRepository: AgroRepository) : View
                 } else {
                     "Não é necessário irrigar hoje. O solo está úmido."
                 }
+
+                // Salva no banco de dados
+                val historyEntry = QueryHistory(
+                    stationCode = stationCode,
+                    recommendation = recommendationText,
+                    precipitation = weatherData.precipitation,
+                    evapotranspiration = weatherData.evapotranspiration,
+                    queryDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                )
+                // A lógica para salvar será adicionada no repositório
+                // agroRepository.insertQuery(historyEntry)
 
                 uiState = RecommendationUiState.Success(recommendationText)
 

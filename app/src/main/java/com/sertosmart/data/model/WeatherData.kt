@@ -3,11 +3,16 @@ package com.sertosmart.data.model
 import com.google.gson.annotations.SerializedName
 
 /**
- * Representa os dados meteorológicos recebidos da API.
- * Os nomes das variáveis devem corresponder às chaves no JSON da API.
- * A anotação @SerializedName é útil se os nomes forem diferentes.
+ * Representa os dados meteorológicos retornados pela API do INMET.
+ * Usamos @SerializedName para mapear os nomes do JSON (ex: "CHUVA")
+ * para os nomes das nossas propriedades (ex: "precipitation").
  */
 data class WeatherData(
-    @SerializedName("precipitacao") val precipitation: Double,
-    @SerializedName("evapotranspiracao") val evapotranspiration: Double
+    // O campo na API é "CHUVA" (precipitação em mm)
+    @SerializedName("CHUVA")
+    val precipitation: Double = 0.0,
+
+    // O campo na API é "EVAPORACAO_PICH" (evaporação em mm)
+    @SerializedName("EVAPORACAO_PICH")
+    val evapotranspiration: Double = 0.0
 )

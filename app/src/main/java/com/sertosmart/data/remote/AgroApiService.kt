@@ -3,19 +3,30 @@ package com.sertosmart.data.remote
 import com.sertosmart.data.model.WeatherData
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Path
 import retrofit2.http.GET
-import retrofit2.http.Query
 
-private const val BASE_URL = "https://api.inmet.gov.br/" // Exemplo! Use a URL base real da API.
+private const val BASE_URL = "https://apitempo.inmet.gov.br/"
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(GsonConverterFactory.create())
     .baseUrl(BASE_URL)
     .build()
 
+/**
+ * Interface para a API do INMET.
+ */
 interface AgroApiService {
-    @GET("estacao/dadosdiarios") // Exemplo! Use o endpoint real.
-    suspend fun getDailyData(@Query("codigo") stationCode: String): WeatherData
+    /**
+     * Busca os dados diários de uma estação para um intervalo de datas.
+     * A API do INMET retorna uma lista, mesmo que seja para um único dia.
+     */
+    @GET("estacao/diaria/{dataInicial}/{dataFinal}/{codigoEstacao}")
+    suspend fun getDailyData(
+        @Path("codigoEstacao") stationCode: String,
+        @Path("dataInicial") startDate: String,
+        @Path("dataFinal") endDate: String
+    ): List<WeatherData> // A API retorna uma lista de dados diários
 }
 
 object AgroApi {
