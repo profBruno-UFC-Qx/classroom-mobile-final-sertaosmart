@@ -15,6 +15,7 @@ navigationRuntimeKtx = "2.7.7"
 roomCompiler = "2.6.1"
 
 kotlinKsp = "2.0.0-1.0.21"
+datastorePreferences = "1.1.1"
 
 
 [libraries]
@@ -38,6 +39,8 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+
 
 
 [plugins]

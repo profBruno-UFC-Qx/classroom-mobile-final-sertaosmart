@@ -12,30 +12,30 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sertosmart.data.model.QueryHistory
+import com.sertosmart.ui.history.HistoryViewModel
+import com.sertosmart.ui.history.HistoryViewModelFactory
 
 @Composable
 fun HistoryScreen(
-    // O ViewModel passará o estado da UI para cá
-    // uiState: HistoryUiState,
+    historyViewModel: HistoryViewModel,
     modifier: Modifier = Modifier
 ) {
-    // Por enquanto, vamos usar dados de exemplo
-    val fakeHistory = listOf(
-        QueryHistory(1, "A301", "Irrigue 5.2 mm hoje.", 0.0, 5.2, "20/05/2024 10:30"),
-        QueryHistory(2, "A301", "Não é necessário irrigar hoje.", 10.0, 4.5, "19/05/2024 09:15"),
-        QueryHistory(3, "A301", "Irrigue 3.0 mm hoje.", 1.0, 4.0, "18/05/2024 11:00")
-    )
+    // Coleta o estado do ViewModel. A UI será recomposta automaticamente quando o estado mudar.
+    val historyList by historyViewModel.historyUiState.collectAsState()
 
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(fakeHistory) { historyItem ->
+        items(historyList) { historyItem ->
             HistoryItemCard(historyItem = historyItem)
         }
     }

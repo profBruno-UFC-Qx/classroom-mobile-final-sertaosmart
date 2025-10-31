@@ -1,15 +1,15 @@
 package com.sertosmart.data.repository
 
+import com.sertosmart.data.local.QueryHistoryDao
+import com.sertosmart.data.model.QueryHistory
 import com.sertosmart.data.model.WeatherData
 import com.sertosmart.data.remote.AgroApiService
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-/**
- * Implementação do repositório que busca os dados da rede usando o AgroApiService.
- */
 class NetworkAgroRepository(
-    private val agroApiService: AgroApiService
+    private val agroApiService: AgroApiService,
+    private val queryHistoryDao: QueryHistoryDao
 ) : AgroRepository {
     override suspend fun getDailyData(stationCode: String): WeatherData {
         // Pega a data de hoje no formato AAAA-MM-DD exigido pela API
@@ -20,5 +20,9 @@ class NetworkAgroRepository(
         val dailyDataList = agroApiService.getDailyData(stationCode, today, today)
         return dailyDataList.firstOrNull()
             ?: throw NoSuchElementException("Nenhum dado retornado pela API para a data de hoje.")
+    }
+
+    override suspend fun insertQuery(query: QueryHistory) {
+        queryHistoryDao.insert(query)
     }
 }

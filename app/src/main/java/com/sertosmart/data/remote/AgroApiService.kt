@@ -1,5 +1,6 @@
 package com.sertosmart.data.remote
 
+import com.sertosmart.data.model.Station
 import com.sertosmart.data.model.WeatherData
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -27,6 +28,12 @@ interface AgroApiService {
         @Path("dataInicial") startDate: String,
         @Path("dataFinal") endDate: String
     ): List<WeatherData> // A API retorna uma lista de dados diários
+
+    /**
+     * Busca a lista de todas as estações automáticas.
+     */
+    @GET("estacoes/A")
+    suspend fun getStations(): List<Station>
 }
 
 object AgroApi {
