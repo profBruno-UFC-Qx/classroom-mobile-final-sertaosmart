@@ -1,4 +1,4 @@
-package com.sertaosmart.data.local
+package com.sertaosmart.data.repository
 
 import android.content.Context
 import androidx.datastore.core.DataStore

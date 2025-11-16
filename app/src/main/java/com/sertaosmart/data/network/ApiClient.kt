@@ -1,14 +1,14 @@
-package com.sertosmart
+package com.sertaosmart.data.network
 
-// File: app/src/main/java/com/sertosmart/data/network/ApiClient.kt
+import com.sertaosmart.data.remote.WeatherApiService
+
+
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 
-    // !! IMPORTANTE !!
-    // Substitua pela URL base da sua API
     private const val BASE_URL = "https://api.exemplo.com/"
 
     // Cria uma instância do Retrofit configurada

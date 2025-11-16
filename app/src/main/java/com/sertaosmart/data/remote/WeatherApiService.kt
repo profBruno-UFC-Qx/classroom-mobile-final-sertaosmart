@@ -1,8 +1,8 @@
-package com.sertosmart
+package com.sertaosmart.data.remote
 
-// File: app/src/main/java/com/sertosmart/data/network/WeatherApiService.kt
+// File: app/src/main/java/com/sertaosmart/data/network/WeatherApiService.kt
 
-import com.sertosmart.data.model.WeatherData
+import com.sertaosmart.data.model.WeatherData
 import retrofit2.http.GET
 import retrofit2.http.Query
 

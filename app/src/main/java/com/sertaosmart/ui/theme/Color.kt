@@ -1,4 +1,4 @@
-package com.sertosmart.ui.theme
+package com.sertaosmart.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

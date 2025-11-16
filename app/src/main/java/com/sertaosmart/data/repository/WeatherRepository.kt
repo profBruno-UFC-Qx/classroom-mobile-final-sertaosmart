@@ -1,8 +1,8 @@
-package com.sertosmart.data.repository
+package com.sertaosmart.data.repository
 
 
-import com.sertosmart.ApiClient
-import com.sertosmart.data.model.WeatherData
+import com.sertaosmart.data.network.ApiClient
+import com.sertaosmart.data.model.WeatherData
 
 class WeatherRepository {
 

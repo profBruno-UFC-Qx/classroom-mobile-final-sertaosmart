@@ -1,4 +1,4 @@
-package com.sertosmart.ui.theme
+package com.sertaosmart.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,7 +1,7 @@
-package com.sertosmart.data.remote
+package com.sertaosmart.data.remote
 
-import com.sertosmart.data.model.Station
-import com.sertosmart.data.model.WeatherData
+import com.sertaosmart.data.model.Station
+import com.sertaosmart.data.model.WeatherData
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Path

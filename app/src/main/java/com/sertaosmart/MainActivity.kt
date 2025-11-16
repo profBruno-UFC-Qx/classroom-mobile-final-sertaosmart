@@ -1,4 +1,4 @@
-package com.sertosmart
+package com.sertaosmart
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Agriculture
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,17 +34,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.sertosmart.ui.cultura.AddEditCulturaScreen
-import com.sertosmart.ui.cultura.CulturaScreen
-import com.sertosmart.ui.history.HistoryScreen
-import com.sertosmart.ui.history.HistoryViewModelFactory
-import com.sertosmart.ui.recommendation.RecommendationUiState
-import com.sertosmart.ui.recommendation.RecommendationUiState.*
-import com.sertosmart.ui.recommendation.RecommendationViewModel
-import com.sertosmart.ui.recommendation.RecommendationViewModelFactory
-import com.sertosmart.ui.settings.SettingsScreen
-import com.sertosmart.ui.settings.SettingsViewModelFactory
-import com.sertosmart.ui.theme.SertãoSmartTheme
+import com.sertaosmart.ui.cultura.AddEditCulturaScreen
+import com.sertaosmart.ui.cultura.CulturaScreen
+import com.sertaosmart.ui.history.HistoryScreen
+import com.sertaosmart.ui.history.HistoryViewModelFactory
+import com.sertaosmart.ui.recommendation.RecommendationUiState
+import com.sertaosmart.ui.recommendation.RecommendationUiState.*
+import com.sertaosmart.ui.recommendation.RecommendationViewModel
+import com.sertaosmart.ui.recommendation.RecommendationViewModelFactory
+import com.sertaosmart.ui.settings.SettingsScreen
+import com.sertaosmart.ui.settings.SettingsViewModelFactory
+import com.sertaosmart.ui.theme.SertãoSmartTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +59,6 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SertaoSmartApp(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
     val navController = rememberNavController()
     SertãoSmartTheme {
         Scaffold(
@@ -67,7 +67,7 @@ fun SertaoSmartApp(modifier: Modifier = Modifier) {
                     title = { Text("Sertão Smart") },
                     actions = {
                         IconButton(onClick = { navController.navigate("culturas") }) {
-                            Icon(Icons.Filled.Agriculture, contentDescription = "Culturas")
+                            Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Culturas")
                         }
                         IconButton(onClick = { navController.navigate("settings") }) {
                             Icon(Icons.Filled.Settings, contentDescription = "Configurações")
@@ -82,7 +82,9 @@ fun SertaoSmartApp(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable("recommendation") {
-                    val factory = RecommendationViewModelFactory(context)
+
+                    val context = LocalContext.current
+                    val factory = remember { RecommendationViewModelFactory(context) }
                     val recommendationViewModel: RecommendationViewModel = viewModel(factory = factory)
                     RecommendationScreen(
                         uiState = recommendationViewModel.uiState,
@@ -90,14 +92,18 @@ fun SertaoSmartApp(modifier: Modifier = Modifier) {
                     )
                 }
                 composable("history") {
-                    val factory = HistoryViewModelFactory(context)
-                    val historyViewModel: com.sertosmart.ui.history.HistoryViewModel = viewModel(factory = factory)
-                    HistoryScreen(historyViewModel = historyViewModel)
+
+                    val context = LocalContext.current
+                    val factory = remember { HistoryViewModelFactory(context) }
+                    val historyViewModel: com.sertaosmart.ui.history.HistoryViewModel = viewModel(factory = factory)
+                    com.sertaosmart.ui.history.HistoryScreen(historyViewModel = historyViewModel)
                 }
                 composable("settings") {
-                    val factory = SettingsViewModelFactory(context)
-                    val settingsViewModel: com.sertosmart.ui.settings.SettingsViewModel = viewModel(factory = factory)
-                    SettingsScreen(viewModel = settingsViewModel)
+
+                    val context = LocalContext.current
+                    val factory = remember { SettingsViewModelFactory(context) }
+                    val settingsViewModel: com.sertaosmart.ui.settings.SettingsViewModel = viewModel(factory = factory)
+                    com.sertaosmart.ui.settings.SettingsScreen(viewModel = settingsViewModel)
                 }
                 composable("culturas") {
                     CulturaScreen(
@@ -153,5 +159,9 @@ fun RecommendationScreen(
 @Composable
 fun GreetingPreview() {
     SertãoSmartTheme {
+        RecommendationScreen(
+            uiState = Success("Recomendação: Plantar milho na próxima estação chuvosa."),
+            navController = rememberNavController()
+        )
     }
 }

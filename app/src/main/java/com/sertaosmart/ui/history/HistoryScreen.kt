@@ -1,4 +1,4 @@
-package com.sertosmart.ui.history
+package com.sertaosmart.ui.history
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,10 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sertosmart.data.model.QueryHistory
-import com.sertosmart.ui.history.HistoryViewModel
-import com.sertosmart.ui.history.HistoryViewModelFactory
+import com.sertaosmart.data.model.QueryHistory
 
 @Composable
 fun HistoryScreen(

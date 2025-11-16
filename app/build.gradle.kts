@@ -9,11 +9,11 @@ configurations.all {
 }
 
 android {
-    namespace = "com.sertosmart"
+    namespace = "com.sertaosmart"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.sertosmart"
+        applicationId = "com.sertaosmart"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

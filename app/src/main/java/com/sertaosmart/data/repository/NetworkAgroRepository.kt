@@ -1,9 +1,9 @@
-package com.sertosmart.data.repository
+package com.sertaosmart.data.repository
 
-import com.sertosmart.data.local.QueryHistoryDao
-import com.sertosmart.data.model.QueryHistory
-import com.sertosmart.data.model.WeatherData
-import com.sertosmart.data.remote.AgroApiService
+import com.sertaosmart.data.DAO.QueryHistoryDao
+import com.sertaosmart.data.model.QueryHistory
+import com.sertaosmart.data.model.WeatherData
+import com.sertaosmart.data.remote.AgroApiService
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

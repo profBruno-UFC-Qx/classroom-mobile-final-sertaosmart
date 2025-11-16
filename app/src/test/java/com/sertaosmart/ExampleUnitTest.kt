@@ -1,4 +1,4 @@
-package com.sertosmart
+package com.sertaosmart
 
 import org.junit.Test
 

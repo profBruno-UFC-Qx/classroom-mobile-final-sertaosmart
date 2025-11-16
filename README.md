@@ -26,7 +26,7 @@ Utilizando dados agrometeorológicos de uma API externa (INMET), o app calcula o
 ## Requisitos Funcionais
 
 ### Requisitos Prioritários (Foco Atual: CRUD Local)
-- [ ] **RF001 - CRUD de Culturas:** Cadastro, visualização, edição e exclusão de culturas (ex: Milho, Feijão)
+- [x] **RF001 - CRUD de Culturas:** Cadastro, visualização, edição e exclusão de culturas (ex: Milho, Feijão)
 - [ ] **RF002 - Histórico de Irrigação:** Salvar histórico local das recomendações e irrigações realizadas
 - [ ] **RF003 - Seleção de Localidade:** Escolha da cidade ou estação meteorológica mais próxima
 

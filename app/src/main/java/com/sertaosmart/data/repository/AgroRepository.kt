@@ -1,7 +1,7 @@
-package com.sertosmart.data.repository
+package com.sertaosmart.data.repository
 
-import com.sertosmart.data.model.QueryHistory
-import com.sertosmart.data.model.WeatherData
+import com.sertaosmart.data.model.QueryHistory
+import com.sertaosmart.data.model.WeatherData
 
 
 interface AgroRepository {

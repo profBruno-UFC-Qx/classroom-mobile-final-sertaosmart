@@ -1,4 +1,4 @@
-package com.sertosmart.data.model
+package com.sertaosmart.data.model
 
 import com.google.gson.annotations.SerializedName
 
