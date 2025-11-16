@@ -1,4 +1,4 @@
-package com.sertosmart.data.local
+package com.sertaosmart.data.local
 
 import android.content.Context
 import androidx.datastore.core.DataStore
