@@ -6,7 +6,7 @@
 ## 👥 Equipe
 
 * **Nome do Aluno 1:** Breno Gonzaga de Carvalho - 542155
-* **Nome do Aluno 2:** [Seu nome e matrícula]
+* **Nome do Aluno 2:** Sofia Kailany - 587754
 
 ---
 
@@ -291,12 +291,5 @@ Seleção de estação meteorológica e informações do app.
 
 Este projeto foi desenvolvido para fins acadêmicos como parte do projeto final da disciplina.
 
----
-
-## 📞 Contato
-
-Para dúvidas ou sugestões sobre o projeto, entre em contato com a equipe através do GitHub.
-
----
 
 **Desenvolvido com ❤️ usando Kotlin e Jetpack Compose**
