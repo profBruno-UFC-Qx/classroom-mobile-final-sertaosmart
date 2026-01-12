@@ -12,11 +12,8 @@ class NetworkAgroRepository(
     private val queryHistoryDao: QueryHistoryDao
 ) : AgroRepository {
     override suspend fun getDailyData(stationCode: String): WeatherData {
-        // Pega a data de hoje no formato AAAA-MM-DD exigido pela API
         val today = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
 
-        // A API retorna uma lista, mesmo para um único dia.
-        // Pegamos o primeiro (e único) resultado.
         val dailyDataList = agroApiService.getDailyData(stationCode, today, today)
         return dailyDataList.firstOrNull()
             ?: throw NoSuchElementException("Nenhum dado retornado pela API para a data de hoje.")

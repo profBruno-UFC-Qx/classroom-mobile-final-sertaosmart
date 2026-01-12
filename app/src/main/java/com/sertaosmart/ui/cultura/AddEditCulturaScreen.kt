@@ -1,27 +1,27 @@
 package com.sertaosmart.ui.cultura
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sertaosmart.data.model.Cultura
+import com.sertaosmart.ui.components.SectionHeader
+import com.sertaosmart.ui.components.SmartCard
+import com.sertaosmart.ui.components.SmartPrimaryButton
+import com.sertaosmart.ui.components.SmartSecondaryButton
 import kotlinx.coroutines.flow.first
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditCulturaScreen(
     navController: NavController,
@@ -29,6 +29,7 @@ fun AddEditCulturaScreen(
     culturaId: Int? = null
 ) {
     var name by remember { mutableStateOf("") }
+    var nameError by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(culturaId) {
         culturaId?.let { id ->
@@ -39,31 +40,101 @@ fun AddEditCulturaScreen(
         }
     }
 
-    Scaffold { padding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        if (culturaId == null) "Nova Cultura" else "Editar Cultura",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Voltar")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        }
+    ) { padding ->
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text("Nome da Cultura") },
-                modifier = Modifier.fillMaxWidth()
+            SectionHeader(
+                title = if (culturaId == null) "Adicionar nova cultura" else "Editar informações",
+                subtitle = "Preencha os dados da cultura"
             )
-            Button(
-                onClick = {
-                    if (culturaId == null) {
-                        culturaViewModel.insertCultura(Cultura(name = name))
-                    } else {
-                        culturaViewModel.updateCultura(Cultura(id = culturaId, name = name))
-                    }
-                    navController.popBackStack()
-                },
-                modifier = Modifier.fillMaxWidth()
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            SmartCard {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = {
+                            name = it
+                            nameError = if (it.isBlank()) "Nome é obrigatório" else null
+                        },
+                        label = { Text("Nome da Cultura") },
+                        placeholder = { Text("Ex: Milho, Feijão, Mandioca...") },
+                        isError = nameError != null,
+                        supportingText = nameError?.let { { Text(it) } },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                        )
+                    )
+
+                    Text(
+                        text = "Dica: Cadastre todas as suas culturas para receber recomendações personalizadas de irrigação.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text(if (culturaId == null) "Adicionar" else "Salvar")
+                SmartSecondaryButton(
+                    text = "Cancelar",
+                    onClick = { navController.popBackStack() },
+                    modifier = Modifier.weight(1f),
+                    icon = Icons.Default.Close
+                )
+                SmartPrimaryButton(
+                    text = if (culturaId == null) "Adicionar" else "Salvar",
+                    onClick = {
+                        if (name.isBlank()) {
+                            nameError = "Nome é obrigatório"
+                            return@SmartPrimaryButton
+                        }
+                        if (culturaId == null) {
+                            culturaViewModel.insertCultura(Cultura(name = name))
+                        } else {
+                            culturaViewModel.updateCultura(Cultura(id = culturaId, name = name))
+                        }
+                        navController.popBackStack()
+                    },
+                    modifier = Modifier.weight(1f),
+                    icon = Icons.Default.Check,
+                    enabled = name.isNotBlank()
+                )
             }
         }
     }

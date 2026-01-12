@@ -11,20 +11,12 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
-/**
- * Repositório que lida exclusivamente com o acesso ao histórico no banco de dados.
- */
 class HistoryRepository(private val queryHistoryDao: QueryHistoryDao) {
     fun getAllQueries() = queryHistoryDao.getAllQueries()
 }
 
-/**
- * ViewModel para a tela de Histórico.
- */
 class HistoryViewModel(historyRepository: HistoryRepository) : ViewModel() {
 
-    // Expõe o Flow do banco de dados como um StateFlow para a UI observar.
-    // O histórico será atualizado automaticamente.
     val historyUiState: StateFlow<List<QueryHistory>> =
         historyRepository.getAllQueries()
             .stateIn(
@@ -33,9 +25,3 @@ class HistoryViewModel(historyRepository: HistoryRepository) : ViewModel() {
                 initialValue = listOf()
             )
 }
-
-/**
- * Factory para criar o HistoryViewModel com suas dependências (Context).
- */
-// HistoryViewModelFactory is defined in `HistoryViewModelFactory.kt`.
-// Removed duplicate factory here to avoid redeclaration.

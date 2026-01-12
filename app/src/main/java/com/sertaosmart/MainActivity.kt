@@ -4,36 +4,27 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.sertaosmart.ui.components.*
 import com.sertaosmart.ui.cultura.AddEditCulturaScreen
 import com.sertaosmart.ui.cultura.CulturaScreen
 import com.sertaosmart.ui.history.HistoryScreen
@@ -56,24 +47,75 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+sealed class Screen(val route: String, val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
+    object Home : Screen("recommendation", "Início", Icons.Filled.Home)
+    object Culturas : Screen("culturas", "Culturas", Icons.Filled.Favorite)
+    object History : Screen("history", "Histórico", Icons.Filled.DateRange)
+    object Settings : Screen("settings", "Configurações", Icons.Filled.Settings)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SertaoSmartApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val bottomNavItems = listOf(
+        Screen.Home,
+        Screen.Culturas,
+        Screen.History,
+        Screen.Settings
+    )
+
     SertãoSmartTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Sertão Smart") },
-                    actions = {
-                        IconButton(onClick = { navController.navigate("culturas") }) {
-                            Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Culturas")
-                        }
-                        IconButton(onClick = { navController.navigate("settings") }) {
-                            Icon(Icons.Filled.Settings, contentDescription = "Configurações")
+                    title = { 
+                        Text(
+                            "Sertão Smart",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        ) 
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+            },
+            bottomBar = {
+            if (currentRoute in bottomNavItems.map { it.route }) {
+                NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        tonalElevation = 8.dp
+                    ) {
+                        bottomNavItems.forEach { screen ->
+                            NavigationBarItem(
+                                icon = { Icon(screen.icon, contentDescription = screen.title) },
+                                label = { Text(screen.title) },
+                                selected = currentRoute == screen.route,
+                                onClick = {
+                                    navController.navigate(screen.route) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            )
                         }
                     }
-                )
+                }
             }
         ) { innerPadding ->
             NavHost(
@@ -82,28 +124,26 @@ fun SertaoSmartApp(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable("recommendation") {
-
                     val context = LocalContext.current
                     val factory = remember { RecommendationViewModelFactory(context) }
                     val recommendationViewModel: RecommendationViewModel = viewModel(factory = factory)
                     RecommendationScreen(
                         uiState = recommendationViewModel.uiState,
+                        onRefresh = { recommendationViewModel.getRecommendation("A301") },
                         navController = navController
                     )
                 }
                 composable("history") {
-
                     val context = LocalContext.current
                     val factory = remember { HistoryViewModelFactory(context) }
                     val historyViewModel: com.sertaosmart.ui.history.HistoryViewModel = viewModel(factory = factory)
-                    com.sertaosmart.ui.history.HistoryScreen(historyViewModel = historyViewModel)
+                    HistoryScreen(historyViewModel = historyViewModel)
                 }
                 composable("settings") {
-
                     val context = LocalContext.current
                     val factory = remember { SettingsViewModelFactory(context) }
                     val settingsViewModel: com.sertaosmart.ui.settings.SettingsViewModel = viewModel(factory = factory)
-                    com.sertaosmart.ui.settings.SettingsScreen(viewModel = settingsViewModel)
+                    SettingsScreen(viewModel = settingsViewModel)
                 }
                 composable("culturas") {
                     CulturaScreen(
@@ -131,37 +171,112 @@ fun SertaoSmartApp(modifier: Modifier = Modifier) {
 @Composable
 fun RecommendationScreen(
     uiState: RecommendationUiState,
+    onRefresh: () -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.weight(1f)
+        SectionHeader(
+            title = "Recomendação de Irrigação",
+            subtitle = "Baseado em dados agrometeorológicos"
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        SmartCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         ) {
-            when (uiState) {
-                is Loading -> CircularProgressIndicator()
-                is Success -> Text(text = uiState.recommendation, textAlign = TextAlign.Center)
-                is Error -> Text(text = uiState.message)
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                when (uiState) {
+                    is Loading -> SmartLoadingIndicator(
+                        message = "Buscando dados meteorológicos..."
+                    )
+                    is Success -> Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = if (uiState.recommendation.contains("Irrigue")) 
+                                Icons.Filled.Warning else Icons.Filled.Check,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = if (uiState.recommendation.contains("Irrigue"))
+                                MaterialTheme.colorScheme.primary
+                            else
+                                MaterialTheme.colorScheme.tertiary
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Text(
+                            text = uiState.recommendation,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Última atualização: Agora",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    is Error -> ErrorMessage(
+                        message = uiState.message,
+                        onRetry = onRefresh
+                    )
+                }
             }
         }
-        Button(onClick = { navController.navigate("history") }) {
-            Text("Ver Histórico")
-        }
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SertãoSmartTheme {
-        RecommendationScreen(
-            uiState = Success("Recomendação: Plantar milho na próxima estação chuvosa."),
-            navController = rememberNavController()
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            SmartPrimaryButton(
+                text = "Atualizar",
+                onClick = onRefresh,
+                modifier = Modifier.weight(1f),
+                icon = Icons.Filled.Refresh,
+                enabled = uiState !is Loading
+            )
+            SmartSecondaryButton(
+                text = "Histórico",
+                onClick = { navController.navigate("history") },
+                modifier = Modifier.weight(1f),
+                icon = Icons.Filled.DateRange
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            InfoCard(
+                title = "Economia",
+                value = "15%",
+                icon = Icons.Filled.Star,
+                modifier = Modifier.weight(1f),
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+            InfoCard(
+                title = "Eficiência",
+                value = "Alta",
+                icon = Icons.Filled.CheckCircle,
+                modifier = Modifier.weight(1f),
+                backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+            )
+        }
     }
 }

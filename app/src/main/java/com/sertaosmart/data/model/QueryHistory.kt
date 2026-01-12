@@ -4,9 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-/**
- * Representa uma entrada no histórico de consultas no banco de dados.
- */
 @Entity(tableName = "query_history")
 data class QueryHistory(
     @PrimaryKey(autoGenerate = true)
@@ -15,5 +12,5 @@ data class QueryHistory(
     val recommendation: String,
     val precipitation: Double,
     val evapotranspiration: Double,
-    val queryDate: String // Formato "dd/MM/yyyy HH:mm"
+    val queryDate: String
 )

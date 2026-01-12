@@ -8,35 +8,69 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = DarkPrimary,
+    onPrimary = DarkPrimaryForeground,
+    primaryContainer = DarkAccent,
+    onPrimaryContainer = DarkAccentForeground,
+    secondary = DarkSecondary,
+    onSecondary = DarkSecondaryForeground,
+    secondaryContainer = DarkMuted,
+    onSecondaryContainer = DarkMutedForeground,
+    tertiary = DarkAccent,
+    onTertiary = DarkAccentForeground,
+    error = DarkDestructive,
+    onError = DarkDestructiveForeground,
+    background = DarkBackground,
+    onBackground = DarkForeground,
+    surface = DarkCard,
+    onSurface = DarkCardForeground,
+    surfaceVariant = DarkMuted,
+    onSurfaceVariant = DarkMutedForeground,
+    outline = DarkBorder,
+    outlineVariant = DarkBorder,
+    scrim = Color.Black.copy(alpha = 0.5f),
+    inverseSurface = LightCard,
+    inverseOnSurface = LightCardForeground,
+    inversePrimary = LightPrimary,
+    surfaceTint = DarkPrimary
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = LightPrimary,
+    onPrimary = LightPrimaryForeground,
+    primaryContainer = LightAccent,
+    onPrimaryContainer = LightAccentForeground,
+    secondary = LightSecondary,
+    onSecondary = LightSecondaryForeground,
+    secondaryContainer = LightMuted,
+    onSecondaryContainer = LightMutedForeground,
+    tertiary = LightAccent,
+    onTertiary = LightAccentForeground,
+    error = LightDestructive,
+    onError = LightDestructiveForeground,
+    background = LightBackground,
+    onBackground = LightForeground,
+    surface = LightCard,
+    onSurface = LightCardForeground,
+    surfaceVariant = LightMuted,
+    onSurfaceVariant = LightMutedForeground,
+    outline = LightBorder,
+    outlineVariant = LightBorder,
+    scrim = Color.Black.copy(alpha = 0.5f),
+    inverseSurface = DarkCard,
+    inverseOnSurface = DarkCardForeground,
+    inversePrimary = DarkPrimary,
+    surfaceTint = LightPrimary
 )
 
 @Composable
 fun SertãoSmartTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
