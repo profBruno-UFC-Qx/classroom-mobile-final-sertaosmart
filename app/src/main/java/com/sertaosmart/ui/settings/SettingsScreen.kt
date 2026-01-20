@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -41,6 +43,9 @@ class SettingsViewModel(
     val selectedStationCode: StateFlow<String> = userPreferencesRepository.selectedStationCode
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "A301")
 
+    val isDarkTheme: StateFlow<Boolean> = userPreferencesRepository.isDarkTheme
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
     init {
         getStations()
     }
@@ -71,6 +76,12 @@ class SettingsViewModel(
             userPreferencesRepository.saveStationCode(stationCode)
         }
     }
+
+    fun toggleTheme(isDark: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.saveThemePreference(isDark)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,6 +89,7 @@ class SettingsViewModel(
 fun SettingsScreen(viewModel: SettingsViewModel) {
     val uiState = viewModel.uiState
     val selectedStationCode by viewModel.selectedStationCode.collectAsState()
+    val isDarkTheme by viewModel.isDarkTheme.collectAsState()
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -92,6 +104,53 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         )
 
         Spacer(modifier = Modifier.height(8.dp))
+
+        SmartCard {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "Aparência",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Modo Escuro",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Switch(
+                        checked = isDarkTheme,
+                        onCheckedChange = { viewModel.toggleTheme(it) },
+                        thumbContent = {
+                            if (isDarkTheme) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+        }
 
         SmartCard {
             Column(

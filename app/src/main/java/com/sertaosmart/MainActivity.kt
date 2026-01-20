@@ -38,6 +38,7 @@ import com.sertaosmart.ui.recommendation.RecommendationViewModelFactory
 import com.sertaosmart.ui.settings.SettingsScreen
 import com.sertaosmart.ui.settings.SettingsViewModelFactory
 import com.sertaosmart.ui.theme.SertãoSmartTheme
+import com.sertaosmart.data.repository.UserPreferencesRepository
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +60,11 @@ sealed class Screen(val route: String, val title: String, val icon: androidx.com
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SertaoSmartApp(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val userPreferencesRepository = remember { UserPreferencesRepository(context) }
+    val mainViewModel: MainViewModel = viewModel(factory = MainViewModelFactory(userPreferencesRepository))
+    val isDarkTheme by mainViewModel.isDarkTheme.collectAsState()
+
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -70,7 +76,7 @@ fun SertaoSmartApp(modifier: Modifier = Modifier) {
         Screen.Settings
     )
 
-    SertãoSmartTheme {
+    SertãoSmartTheme(darkTheme = isDarkTheme) {
         Scaffold(
             topBar = {
                 TopAppBar(
