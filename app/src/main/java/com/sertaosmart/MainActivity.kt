@@ -183,6 +183,9 @@ fun RecommendationScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+    val waterSaved = if (uiState is Success) "%.0f%%".format(uiState.waterSaved) else "--"
+    val efficiency = if (uiState is Success) uiState.efficiency else "--"
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -233,7 +236,10 @@ fun RecommendationScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Última atualização: Agora",
+                            text = "Chuva: %.1f mm | Evap.: %.1f mm".format(
+                                uiState.precipitation,
+                                uiState.evapotranspiration
+                            ),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -270,8 +276,8 @@ fun RecommendationScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             InfoCard(
-                title = "Economia",
-                value = "15%",
+                title = "Economia de Água",
+                value = waterSaved,
                 icon = Icons.Filled.Star,
                 modifier = Modifier.weight(1f),
                 backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -279,7 +285,7 @@ fun RecommendationScreen(
             )
             InfoCard(
                 title = "Eficiência",
-                value = "Alta",
+                value = efficiency,
                 icon = Icons.Filled.CheckCircle,
                 modifier = Modifier.weight(1f),
                 backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,

@@ -21,7 +21,13 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 sealed interface RecommendationUiState {
-    data class Success(val recommendation: String) : RecommendationUiState
+    data class Success(
+        val recommendation: String,
+        val precipitation: Double,
+        val evapotranspiration: Double,
+        val waterSaved: Double,
+        val efficiency: String
+    ) : RecommendationUiState
     data class Error(val message: String) : RecommendationUiState
     object Loading : RecommendationUiState
 }
@@ -50,7 +56,9 @@ class RecommendationViewModel(
                     agroRepository.getDailyData(stationCode)
                 }
 
-                val irrigationNeeded = weatherData.evapotranspiration - weatherData.precipitation
+                val precipitation = weatherData.precipitation
+                val evapotranspiration = weatherData.evapotranspiration
+                val irrigationNeeded = evapotranspiration - precipitation
 
                 val recommendationText = if (irrigationNeeded > 0) {
                     "Irrigue %.1f mm hoje.".format(irrigationNeeded)
@@ -58,41 +66,41 @@ class RecommendationViewModel(
                     "Não é necessário irrigar hoje. O solo está úmido."
                 }
 
+                val waterSaved = if (precipitation > 0) {
+                    (precipitation / (precipitation + evapotranspiration)) * 100
+                } else {
+                    0.0
+                }
+
+                val efficiency = when {
+                    irrigationNeeded <= 0 -> "Ótima"
+                    irrigationNeeded < 5 -> "Alta"
+                    irrigationNeeded < 10 -> "Média"
+                    else -> "Baixa"
+                }
+
                 val historyEntry = QueryHistory(
                     stationCode = stationCode,
                     recommendation = recommendationText,
-                    precipitation = weatherData.precipitation,
-                    evapotranspiration = weatherData.evapotranspiration,
+                    precipitation = precipitation,
+                    evapotranspiration = evapotranspiration,
                     queryDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
                 )
                 agroRepository.insertQuery(historyEntry)
-                uiState = RecommendationUiState.Success(recommendationText)
+                
+                uiState = RecommendationUiState.Success(
+                    recommendation = recommendationText,
+                    precipitation = precipitation,
+                    evapotranspiration = evapotranspiration,
+                    waterSaved = waterSaved,
+                    efficiency = efficiency
+                )
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                
-                val mockPrecipitation = 15.5
-                val mockEvapotranspiration = 8.2
-                
-                val irrigationNeeded = mockEvapotranspiration - mockPrecipitation
-                
-                val recommendationText = if (irrigationNeeded > 0) {
-                    "Irrigue %.1f mm hoje.".format(irrigationNeeded)
-                } else {
-                    "Não é necessário irrigar hoje. O solo está úmido."
-                }
-                
-                val historyEntry = QueryHistory(
-                    stationCode = stationCode,
-                    recommendation = recommendationText,
-                    precipitation = mockPrecipitation,
-                    evapotranspiration = mockEvapotranspiration,
-                    queryDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-                )
-                agroRepository.insertQuery(historyEntry)
-                
-                uiState = RecommendationUiState.Success(recommendationText)
+                uiState = RecommendationUiState.Error("Erro ao buscar dados: ${e.message}")
             }
         }
     }
 }
+
