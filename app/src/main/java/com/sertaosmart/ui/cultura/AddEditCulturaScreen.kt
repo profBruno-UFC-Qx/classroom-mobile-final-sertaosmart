@@ -9,10 +9,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sertaosmart.data.model.Cultura
 import com.sertaosmart.ui.components.SectionHeader
@@ -25,7 +23,7 @@ import kotlinx.coroutines.flow.first
 @Composable
 fun AddEditCulturaScreen(
     navController: NavController,
-    culturaViewModel: CulturaViewModel = viewModel(factory = CulturaViewModelFactory(context = LocalContext.current)),
+    culturaViewModel: CulturaViewModel,
     culturaId: Int? = null
 ) {
     var name by remember { mutableStateOf("") }

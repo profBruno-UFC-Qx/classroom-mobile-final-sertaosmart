@@ -15,10 +15,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sertaosmart.data.model.Cultura
 import com.sertaosmart.ui.components.EmptyState
 import com.sertaosmart.ui.components.SmartCard
@@ -26,7 +24,7 @@ import com.sertaosmart.ui.components.SectionHeader
 
 @Composable
 fun CulturaScreen(
-    culturaViewModel: CulturaViewModel = viewModel(factory = CulturaViewModelFactory(context = LocalContext.current)),
+    culturaViewModel: CulturaViewModel,
     onAddCultura: () -> Unit,
     onEditCultura: (Int) -> Unit
 ) {

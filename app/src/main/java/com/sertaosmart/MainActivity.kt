@@ -27,6 +27,8 @@ import androidx.navigation.navArgument
 import com.sertaosmart.ui.components.*
 import com.sertaosmart.ui.cultura.AddEditCulturaScreen
 import com.sertaosmart.ui.cultura.CulturaScreen
+import com.sertaosmart.ui.cultura.CulturaViewModel
+import com.sertaosmart.ui.cultura.CulturaViewModelFactory
 import com.sertaosmart.ui.history.HistoryScreen
 import com.sertaosmart.ui.history.HistoryViewModelFactory
 import com.sertaosmart.ui.recommendation.RecommendationUiState
@@ -118,13 +120,16 @@ fun SertaoSmartApp(modifier: Modifier = Modifier) {
                 }
             }
         ) { innerPadding ->
+            val context = LocalContext.current
+            val culturaViewModelFactory = remember { CulturaViewModelFactory(context) }
+            val sharedCulturaViewModel: CulturaViewModel = viewModel(factory = culturaViewModelFactory)
+
             NavHost(
                 navController = navController,
                 startDestination = "recommendation",
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable("recommendation") {
-                    val context = LocalContext.current
                     val factory = remember { RecommendationViewModelFactory(context) }
                     val recommendationViewModel: RecommendationViewModel = viewModel(factory = factory)
                     RecommendationScreen(
@@ -134,25 +139,27 @@ fun SertaoSmartApp(modifier: Modifier = Modifier) {
                     )
                 }
                 composable("history") {
-                    val context = LocalContext.current
                     val factory = remember { HistoryViewModelFactory(context) }
                     val historyViewModel: com.sertaosmart.ui.history.HistoryViewModel = viewModel(factory = factory)
                     HistoryScreen(historyViewModel = historyViewModel)
                 }
                 composable("settings") {
-                    val context = LocalContext.current
                     val factory = remember { SettingsViewModelFactory(context) }
                     val settingsViewModel: com.sertaosmart.ui.settings.SettingsViewModel = viewModel(factory = factory)
                     SettingsScreen(viewModel = settingsViewModel)
                 }
                 composable("culturas") {
                     CulturaScreen(
+                        culturaViewModel = sharedCulturaViewModel,
                         onAddCultura = { navController.navigate("addCultura") },
                         onEditCultura = { navController.navigate("editCultura/$it") }
                     )
                 }
                 composable("addCultura") {
-                    AddEditCulturaScreen(navController = navController)
+                    AddEditCulturaScreen(
+                        navController = navController,
+                        culturaViewModel = sharedCulturaViewModel
+                    )
                 }
                 composable(
                     "editCultura/{culturaId}",
@@ -160,6 +167,7 @@ fun SertaoSmartApp(modifier: Modifier = Modifier) {
                 ) { backStackEntry ->
                     AddEditCulturaScreen(
                         navController = navController,
+                        culturaViewModel = sharedCulturaViewModel,
                         culturaId = backStackEntry.arguments?.getInt("culturaId")
                     )
                 }
